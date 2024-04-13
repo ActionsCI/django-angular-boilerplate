@@ -18,7 +18,7 @@ jobs:
   pre-deploy:
     needs: [ pre-build, build ]
     name: pre-deploy
-    uses:  ActionsCI/reusable-workflows/.github/workflows/helm_package_push.yaml
+    uses:  ActionsCI/reusable-workflows/.github/workflows/helm_package_push.yaml@main
     with:
       version: ${{ needs.pre-build.outputs.version }}
 
