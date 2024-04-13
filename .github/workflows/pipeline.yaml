@@ -25,7 +25,7 @@ jobs:
   deploy:
     needs: [ pre-build, build ]
     name: deploy
-    uses: ActionsCI/reusable-workflows/.github/workflows/deploy-cloud-run.yaml@main
+    uses: ActionsCI/reusable-workflows/.github/workflows/gcp_cloudrun_deploy.yaml@main
     with:
       version: ${{ needs.pre-build.outputs.version }}
       gcp_cloud_run_sa_key: ${{ secrets.GCP_CLOUDRUN_SA_KEY }}
