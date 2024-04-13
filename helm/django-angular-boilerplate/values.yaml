@@ -1,0 +1,13 @@
+replicaCount: 1
+
+image:
+  repository: mydjangoapp
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: false

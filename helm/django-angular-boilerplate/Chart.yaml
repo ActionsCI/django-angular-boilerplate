@@ -1,0 +1,4 @@
+apiVersion: v2
+name: django-angular-chart
+description: A Helm chart for the Django-Angular application
+version: 0.1.0
