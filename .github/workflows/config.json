@@ -1,0 +1,16 @@
+{
+    "docker": {
+        "registry": "gcr.io",
+        "repository": "django-angular-boilerplate",
+        "dockerfile": "Dockerfile",
+        "image_name": "django-angular-boilerplate",
+        "build_args": {
+            "skiptests": "true"
+        }
+    },
+    "helm": {
+        "registry": "gcr.io",
+        "repository": "django-angular-boilerplate",
+        "chart_dir": "./helm/django-angular-boilerplate"
+    }
+}

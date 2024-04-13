@@ -1,0 +1,31 @@
+name: build and deploy
+on:
+  push:
+
+jobs:
+  pre-build:
+    name: pre-build
+    uses: ActionsCI/reusable-workflows/.github/workflows/compute_next_semver.yaml@0.1.0
+
+  build:
+    needs: pre-build
+    name: build
+    uses: ActionsCI/reusable-workflows/.github/workflows/docker_build_push.yaml@main
+    with:
+      version: ${{ needs.pre-build.outputs.version }}
+      credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+  pre-deploy:
+    needs: [ pre-build, build ]
+    name: pre-deploy
+    uses:  ActionsCI/reusable-workflows/.github/workflows/helm_package_push.yaml
+    with:
+      version: ${{ needs.pre-build.outputs.version }}
+
+  deploy:
+    needs: [ pre-build, build ]
+    name: deploy
+    uses: ActionsCI/reusable-workflows/.github/workflows/deploy-cloud-run.yaml@main
+    with:
+      version: ${{ needs.pre-build.outputs.version }}
+      gcp_cloud_run_sa_key: ${{ secrets.GCP_CLOUDRUN_SA_KEY }}
