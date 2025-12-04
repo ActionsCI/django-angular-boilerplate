@@ -1,0 +1,54 @@
+# CI/CD Pipeline Configuration for django-angular-boilerplate
+
+cicd:
+  # Service name used for Docker image and deployments
+  service_name: django-angular-boilerplate
+  major_version: 0
+  minor_version: 1
+  # Docker-related configuration
+  docker:
+    dockerfile: Dockerfile
+    context: .
+    labels:
+      maintainer: devops@actionsci.com
+      vendor: Example Vendor
+      # Add more labels as needed
+    build_args:
+      NODE_ENV: production
+      # Add more build args as needed, e.g. API_URL: https://api.example.com
+    image:
+      repository_name: django-angular-boilerplate
+      # tag: latest #tag override in pipeline.yaml
+    push: true
+
+  # Commands to run for testing
+  # integration_test_command: 'npm run lint'  # runs integration tests in test/integration only
+
+  # Toggle deployments for each environment
+  deploy:
+    dev: true
+    staging: true
+    prod: true  # Enable production deploys on merge to main
+
+  # Helm chart configuration
+  helm:
+    chart_path: helm/
+    release_name: django-angular-boilerplate
+
+  # AWS/ECR/EKS configuration
+  aws:
+    ecr_url: 01234567890.dkr.ecr.us-west-1.amazonaws.com
+    ecr_region: us-west-1
+    role_arn: arn:aws:iam::01234567890:role/github-actions-eks-deploy-role-prod
+
+  # Other possible keys/args you can add for workflows:
+  # - test_settings: (e.g. run_unit: true, run_integration: true)
+  # - notifications: (e.g. slack, email)
+  # - versioning: (e.g. semver, custom tag logic)
+  # - export_all_vars: true/false (if you want to export all config as outputs)
+  # - custom_deploy_targets: (e.g. staging, sandbox)
+  # - build_matrix: (for matrix builds)
+  # - env: (for global environment variables)
+  # - secrets: (for custom secret names/values)
+  #
+  # See actions-reusable-workflows/cicd.yaml and docs/build-nodejs.md for more examples and documentation.

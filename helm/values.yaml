@@ -1,0 +1,32 @@
+targetGroupBindings:
+  publicTargetGroup:
+  internalTargetGroup:
+
+hpa:
+  enabled: true
+  cpuTarget: 130
+  memoryTarget: 90
+  maxReplicas: 8
+  minReplicas: 2
+
+resources:
+  limits:
+    memory: 1000Mi
+    cpu: 1000m
+  requests:
+    memory: 500Mi
+    cpu: 500m
+
+irsaRolePrefix:
+
+service:
+  name: django-angular-boilerplate
+  image:
+    registry:
+    name:
+    tag:
+  ports:
+    http: 3005
+  probes:
+    readiness:
+      path: /api/v1/health

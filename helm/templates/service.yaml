@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "serviceNameEnv" $ }}
+spec:
+  selector:
+    app: {{ template "serviceNameEnv" $ }}
+  ports:
+    - port: {{ $.Values.service.ports.http }}
+  type: NodePort

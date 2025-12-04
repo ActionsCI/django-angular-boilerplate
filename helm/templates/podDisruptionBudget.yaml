@@ -1,0 +1,11 @@
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: "{{ $.Values.service.name }}"
+spec:
+  maxUnavailable: 33%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $.Values.service.name }}
+      app.kubernetes.io/part-of: {{ $.Values.service.name }}

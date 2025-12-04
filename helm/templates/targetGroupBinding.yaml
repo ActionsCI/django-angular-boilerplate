@@ -1,0 +1,27 @@
+{{- if $.Values.targetGroupBindings.publicTargetGroup }}
+---
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: {{ template "serviceNameEnv" $ }}-target-group-binding
+spec:
+  serviceRef:
+    name: {{ template "serviceNameEnv" $ }}
+    port: {{ $.Values.service.ports.http }}
+  targetGroupARN: {{ $.Values.targetGroupBindings.publicTargetGroup }}
+  targetType: ip
+{{- end }}
+
+{{- if $.Values.targetGroupBindings.internalTargetGroup }}
+---
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: {{ template "serviceNameEnv" $ }}-internal-target-group-binding
+spec:
+  serviceRef:
+    name: {{ template "serviceNameEnv" $ }}
+    port: {{ $.Values.service.ports.http }}
+  targetGroupARN: {{ $.Values.targetGroupBindings.internalTargetGroup }}
+  targetType: ip
+{{- end }}
