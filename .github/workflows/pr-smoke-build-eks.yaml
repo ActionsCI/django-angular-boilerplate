@@ -26,4 +26,5 @@ jobs:
       env: sandbox
       ref: main
       target_branch: pr-test/${{ inputs.pr_number }}
+      test_mode: true
     secrets: inherit
