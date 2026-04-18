@@ -1,10 +1,10 @@
 # Stage 1: build Angular frontend
 FROM node:10-alpine AS frontend
-ARG NODE_ENV=production
 WORKDIR /build
 COPY website/package*.json ./
 RUN npm ci --quiet
 COPY website/ ./
+ARG NODE_ENV=production
 RUN npm run build
 
 # Stage 2: Django + gunicorn runtime

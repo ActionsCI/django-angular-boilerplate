@@ -5,8 +5,14 @@ on:
 
 jobs:
   docker-build:
-    uses: actionsci/reusable-workflows/.github/workflows/docker-build-test.yaml@main
-    with:
-      dockerfile: Dockerfile
-      context: .
-      build_args: NODE_ENV=production
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ActionsCI/docker-build-push@main
+        with:
+          service_name: django-angular-boilerplate
+          image_tag: pr-${{ github.event.pull_request.number }}-${{ github.sha }}
+          registry_url: 01234567890.dkr.ecr.us-west-1.amazonaws.com
+          dockerfile: Dockerfile
+          context: .
+          push: false
+          build_args: NODE_ENV=production
