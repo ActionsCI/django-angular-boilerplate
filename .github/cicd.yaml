@@ -1,0 +1,37 @@
+# Global shared config for all services in this repo.
+# Consumed by actionsci/reusable-workflows/.github/workflows/pre-build.yaml.
+config:
+  version:
+    major: 0
+    minor: 1
+    release_branch: main
+
+  deploy:
+    environments:
+      dev: true
+      staging: true
+      sandbox: true        # required by the build-eks PR smoke
+      production: true
+
+  helm:
+    release_name: django-angular-boilerplate
+    chart_path: helm/
+
+  aws:
+    ecr_url: 01234567890.dkr.ecr.us-west-1.amazonaws.com
+    ecr_region: us-west-1
+    role_arn: arn:aws:iam::01234567890:role/github-actions-eks-deploy-role-prod
+
+# One key per service. pre-build enumerates every top-level key other
+# than `config` and treats it as a service to build.
+django-angular-boilerplate:
+  repository_name: django-angular-boilerplate
+  docker:
+    dockerfile: Dockerfile
+    context: .
+    push: true
+    labels:
+      maintainer: devops@actionsci.com
+      vendor: Example Vendor
+    build_args:
+      NODE_ENV: production

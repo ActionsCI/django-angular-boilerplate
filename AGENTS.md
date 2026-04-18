@@ -8,10 +8,10 @@ when validating changes to `build-eks.yaml`.
 
 ```
 .github/workflows/   CI/CD workflows (see .github/AGENTS.md)
+.github/cicd.yaml    Single source of truth for pipeline config (see below)
 helm/                Helm chart for EKS deployment
 jely/                Django 2.1 backend (Python 3.7)
 website/             Angular 5 frontend (Node 10 / Angular CLI 1.7)
-cicd.yaml            Single source of truth for pipeline config
 Dockerfile           Multi-stage build: Angular → Django+gunicorn
 ```
 
@@ -24,22 +24,25 @@ Dockerfile           Multi-stage build: Angular → Django+gunicorn
 | Runtime image | python:3.7-slim | `NODE_ENV` must not be set before `npm ci` |
 | Container port | 3005 | Health probe: `/api/v1/health` |
 
-## cicd.yaml — key fields
+## .github/cicd.yaml — schema
 
-`cicd.yaml` is read by `actionsci/reusable-workflows/.github/workflows/pre-build.yaml`
-to drive the build pipeline. Do not rename top-level keys without checking
-pre-build.yaml's parser.
+Read by `actionsci/reusable-workflows/.github/workflows/pre-build.yaml`.
+Top-level key is `config:` (not `cicd:`). Each service is its own top-level
+key sibling of `config:` — pre-build enumerates everything that isn't `config`.
 
 | Field | Current value | Purpose |
 |---|---|---|
-| `cicd.service_name` | `django-angular-boilerplate` | Image name, release name |
-| `cicd.docker.dockerfile` | `Dockerfile` | Path from repo root |
-| `cicd.docker.context` | `.` | Build context |
-| `cicd.docker.build_args.NODE_ENV` | `production` | Passed to Docker |
-| `cicd.helm.chart_path` | `helm/` | Helm chart location |
-| `cicd.helm.release_name` | `django-angular-boilerplate` | Helm release name |
-| `cicd.aws.ecr_url` | `01234567890.dkr.ecr.us-west-1.amazonaws.com` | ECR registry |
-| `cicd.aws.ecr_region` | `us-west-1` | AWS region |
+| `config.version.major/minor` | `0` / `1` | Semver base |
+| `config.version.release_branch` | `main` | Production deploys only on this branch |
+| `config.deploy.environments.sandbox` | `true` | Required — PR smoke uses `env: sandbox` |
+| `config.deploy.environments.production` | `true` | Key is `production`, not `prod` |
+| `config.helm.chart_path` | `helm/` | |
+| `config.helm.release_name` | `django-angular-boilerplate` | |
+| `config.aws.ecr_url` | `01234567890.dkr.ecr.us-west-1.amazonaws.com` | |
+| `config.aws.ecr_region` | `us-west-1` | |
+| `django-angular-boilerplate.repository_name` | `django-angular-boilerplate` | ECR repo name |
+| `django-angular-boilerplate.docker.dockerfile` | `Dockerfile` | |
+| `django-angular-boilerplate.docker.context` | `.` | |
 
 ## Golden rules
 
