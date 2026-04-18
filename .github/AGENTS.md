@@ -45,12 +45,11 @@ to empty or fail to parse.
 **Inputs:**
 | Input | Purpose |
 |---|---|
-| `reusable_workflows_ref` | SHA of reusable-workflows to call (e.g. the PR's head SHA) |
 | `pr_number` | PR number in reusable-workflows (for run-name and target_branch) |
 | `caller_run_id` | Parent run ID used by the poller to find this run |
 
-**What it does:** calls `build-eks.yaml@{reusable_workflows_ref}` with
-`env: sandbox`, `ref: main`, `target_branch: pr-test/{pr_number}`.
+**What it does:** calls `build-eks.yaml@pr-smoke` with
+`env: sandbox`, `ref: main`, `target_branch: pr-test/{pr_number}`, `test_mode: true`.
 
 ## Relationship to actionsci/reusable-workflows
 
