@@ -29,6 +29,16 @@ The poller in reusable-workflows locates this run by substring-matching
 `display_title` for `"caller <caller_run_id>"`. **Do not change this format**
 without updating the poller in reusable-workflows simultaneously.
 
+**CRITICAL — `uses:` ref must use `github.event.inputs`, not `inputs`:**
+```yaml
+uses: actionsci/reusable-workflows/.github/workflows/build-eks.yaml@${{ github.event.inputs.reusable_workflows_ref }}
+```
+GitHub parses the `uses:` ref before the `inputs` context is in scope, so
+`${{ inputs.reusable_workflows_ref }}` silently resolves to empty and the
+dispatch fails. `github.event.inputs` is part of the `github` context and
+is available at parse time. The `inputs` context works fine everywhere else
+in this file (`run-name`, `with:` block).
+
 **Inputs:**
 | Input | Purpose |
 |---|---|

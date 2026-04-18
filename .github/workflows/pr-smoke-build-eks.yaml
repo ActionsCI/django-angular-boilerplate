@@ -23,7 +23,7 @@ run-name: "PR #${{ inputs.pr_number }} build-eks smoke (caller ${{ inputs.caller
 
 jobs:
   build-eks:
-    uses: actionsci/reusable-workflows/.github/workflows/build-eks.yaml@${{ inputs.reusable_workflows_ref }}
+    uses: actionsci/reusable-workflows/.github/workflows/build-eks.yaml@${{ github.event.inputs.reusable_workflows_ref }}
     with:
       env: sandbox
       ref: main
