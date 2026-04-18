@@ -3,10 +3,6 @@ name: PR Smoke - build-eks (dispatched by reusable-workflows PRs)
 on:
   workflow_dispatch:
     inputs:
-      reusable_workflows_ref:
-        description: 'SHA of ActionsCI/reusable-workflows to exercise'
-        required: true
-        type: string
       pr_number:
         description: 'PR number in reusable-workflows'
         required: true
@@ -16,14 +12,16 @@ on:
         required: true
         type: string
 
-# CRITICAL: must contain "caller <caller_run_id>" - the poller in
-# reusable-workflows/.github/workflows/build-eks-pr-test.yaml locates this
-# run by substring-matching display_title.
 run-name: "PR #${{ inputs.pr_number }} build-eks smoke (caller ${{ inputs.caller_run_id }})"
 
 jobs:
   build-eks:
-    uses: actionsci/reusable-workflows/.github/workflows/build-eks.yaml@${{ github.event.inputs.reusable_workflows_ref }}
+    # Literal @pr-smoke — required because GitHub does not allow expressions
+    # in a reusable workflow's uses: ref. The reusable-workflows PR-test
+    # force-updates refs/heads/pr-smoke to the PR's head SHA right before
+    # dispatching this workflow, so @pr-smoke is effectively "the PR under
+    # test". Global concurrency in that job serializes smokes across PRs.
+    uses: actionsci/reusable-workflows/.github/workflows/build-eks.yaml@pr-smoke
     with:
       env: sandbox
       ref: main

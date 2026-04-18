@@ -29,15 +29,18 @@ The poller in reusable-workflows locates this run by substring-matching
 `display_title` for `"caller <caller_run_id>"`. **Do not change this format**
 without updating the poller in reusable-workflows simultaneously.
 
-**CRITICAL — `uses:` ref must use `github.event.inputs`, not `inputs`:**
-```yaml
-uses: actionsci/reusable-workflows/.github/workflows/build-eks.yaml@${{ github.event.inputs.reusable_workflows_ref }}
-```
-GitHub parses the `uses:` ref before the `inputs` context is in scope, so
-`${{ inputs.reusable_workflows_ref }}` silently resolves to empty and the
-dispatch fails. `github.event.inputs` is part of the `github` context and
-is available at parse time. The `inputs` context works fine everywhere else
-in this file (`run-name`, `with:` block).
+**CRITICAL — `uses:` ref is the literal branch `@pr-smoke`:**
+GitHub does not allow any expression in a reusable workflow's `uses:` ref —
+not `inputs.*`, not `github.event.inputs.*`. The workaround: the
+reusable-workflows PR-test job force-updates `refs/heads/pr-smoke` to the
+PR's head SHA immediately before dispatching this workflow. `@pr-smoke` is
+therefore always "the SHA under test". Concurrency in the dispatching job
+serializes smokes so two PRs don't race over the same branch.
+
+**Do not replace `@pr-smoke` with an expression** — it will silently resolve
+to empty or fail to parse.
+
+`reusable_workflows_ref` has been removed as an input; it is no longer needed.
 
 **Inputs:**
 | Input | Purpose |
