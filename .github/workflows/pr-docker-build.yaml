@@ -1,0 +1,12 @@
+name: PR - Docker build check
+
+on:
+  pull_request:
+
+jobs:
+  docker-build:
+    uses: actionsci/reusable-workflows/.github/workflows/docker-build-test.yaml@main
+    with:
+      dockerfile: Dockerfile
+      context: .
+      build_args: NODE_ENV=production
